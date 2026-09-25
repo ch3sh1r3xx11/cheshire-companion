@@ -1,0 +1,40 @@
+{
+  "_readme": "Copy to %APPDATA%\\cheshire-companion\\config.json and keep only what you need. Every key is optional.",
+
+  "operatorName": "Ada",
+  "homeDir": "C:\\Users\\you\\Documents\\Cheshire",
+  "memoryFile": "memory.md",
+  "canvasFile": "canvas.md",
+  "personaExtra": [
+    "the operator builds homelab servers and hates small talk before coffee.",
+    "when they mention 'the box', they mean their home server."
+  ],
+
+  "apiPort": 5599,
+
+  "ollama": {
+    "url": "http://127.0.0.1:11434",
+    "hiddenModels": ["uncensored"]
+  },
+  "gemini": {
+    "models": ["gemini-3.1-flash-lite", "gemini-3.5-flash-lite"]
+  },
+
+  "launchers": {
+    "notes": {
+      "path": "C:\\Tools\\open-notes.bat",
+      "match": { "en": "\\bnotes?\\b", "pl": "notatk" },
+      "reply": { "en": "fine, opening your notes. meow.", "pl": "no dobra, otwieram notatki. meow." }
+    }
+  },
+
+  "vision": {
+    "laptopStatsUrl": "",
+    "serverStatsUrl": ""
+  },
+
+  "carousels": {
+    "url": "",
+    "launcher": ""
+  }
+}

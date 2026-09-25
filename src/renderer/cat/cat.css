@@ -1,0 +1,102 @@
+:root {
+  --cyan: #3ddbd9;
+  --magenta: #ec1561;
+  --violet: #a24bd8;
+  --mint: #98ff98;
+  --ink: #08080c;
+  --cat: #3ddbd9; /* the fur colour, set from the menu */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: transparent; overflow: hidden; height: 100%; }
+body { font-family: 'Cascadia Mono', 'Consolas', monospace; }
+
+#stage {
+  position: relative; width: 100%; height: 100%;
+  display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+}
+
+/* ── speech bubble ── */
+#bubble {
+  position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+  max-width: 300px; padding: 7px 11px; z-index: 5;
+  background: var(--ink); border: 1px solid var(--cat); border-radius: 6px;
+  color: var(--cat); font-size: 12px; line-height: 1.45; text-align: center;
+  box-shadow: 0 0 10px currentColor;
+  opacity: 0; transition: opacity .25s; pointer-events: none; white-space: pre-line;
+}
+#bubble.show { opacity: 1; }
+#bubble::after {
+  content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
+  border: 6px solid transparent; border-top-color: var(--cat); border-bottom: none;
+}
+
+/* ── the cat (braille "cat3" from PixelSergey/meow, MIT) ── */
+#cat {
+  cursor: grab; user-select: none; z-index: 1;
+  color: var(--cat);
+  font-size: 11px; line-height: 1.9; letter-spacing: 0; white-space: pre;
+  /* the black halo separates the cat from whatever is under the transparent
+     window — without it braille and terminal text blur together */
+  text-shadow: 0 0 2px #000, 0 0 5px #000, 0 0 9px currentColor;
+  transform: scaleX(-1);
+}
+#cat.facing-right { transform: scaleX(1); }
+#cat:active { cursor: grabbing; }
+#cat.talking { color: var(--magenta); }
+/* "phasing": the palette flows through the cat for a moment */
+#cat.gradient {
+  background: linear-gradient(115deg, var(--magenta), var(--violet), var(--cyan), var(--violet), var(--magenta));
+  background-size: 300% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: none; filter: drop-shadow(0 0 3px #000);
+  animation: shimmer 1.8s linear;
+}
+@keyframes shimmer { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+@media (prefers-reduced-motion: reduce) { #cat.gradient { animation: none; } }
+
+/* ── right-click menu ── */
+#menu {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  width: 250px; padding: 8px; z-index: 20;
+  background: rgba(8, 8, 12, .96); border: 1px solid var(--cat); border-radius: 8px;
+  box-shadow: 0 0 18px rgba(0, 0, 0, .7);
+  font-size: 11px; color: var(--cat);
+}
+#menu[hidden] { display: none; }
+.menu-title {
+  color: var(--violet); letter-spacing: 1px; padding: 2px 6px 6px;
+  border-bottom: 1px solid rgba(162, 75, 216, .35); margin-bottom: 5px;
+}
+.menu-row {
+  padding: 5px 6px; cursor: pointer; border-radius: 4px;
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+}
+.menu-row:hover, .menu-row:focus-visible { background: rgba(255, 255, 255, .07); outline: none; }
+.menu-row .val { color: var(--mint); opacity: .85; }
+.menu-row.danger {
+  color: var(--magenta); margin-top: 4px;
+  border-top: 1px solid rgba(236, 21, 97, .25); padding-top: 7px;
+}
+
+.swatches { display: flex; gap: 6px; padding: 6px; flex-wrap: wrap; }
+.swatches[hidden], .menu-list[hidden] { display: none; }
+.sw {
+  width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: transform .15s;
+}
+.sw:hover { transform: scale(1.15); }
+.sw.active { border-color: #fff; }
+
+.menu-list { max-height: 170px; overflow-y: auto; margin-top: 3px; scrollbar-width: thin; }
+.menu-list::-webkit-scrollbar { width: 5px; }
+.menu-list::-webkit-scrollbar-thumb { background: var(--cat); border-radius: 3px; }
+.list-row {
+  padding: 4px 6px; cursor: pointer; border-radius: 4px;
+  display: flex; justify-content: space-between; gap: 8px;
+}
+.list-row:hover { background: rgba(255, 255, 255, .07); }
+.list-row.active { color: var(--mint); }
+.list-row.muted { cursor: default; opacity: .6; }
+.list-row.warn { color: var(--magenta); cursor: default; }
+.list-row .hint { opacity: .5; font-size: 10px; }

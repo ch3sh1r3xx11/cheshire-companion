@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; base-uri 'none'; form-action 'none'">
+<title>CHESHIRE · chat</title>
+<link rel="stylesheet" href="chat.css">
+</head>
+<body data-cat-side="right" data-mode="chat">
+  <div id="chat-box">
+    <div id="messages" role="log" aria-live="polite"></div>
+
+    <div id="attachment" hidden>
+      <img id="attachment-img" alt="">
+      <span id="attachment-info"></span>
+      <button id="attachment-remove" type="button">✕</button>
+    </div>
+
+    <footer class="composer">
+      <div class="drag-handle"><div></div><div></div><div></div></div>
+      <input type="text" id="input" autocomplete="off" spellcheck="false" maxlength="20000">
+      <button id="close" type="button">✕</button>
+    </footer>
+  </div>
+<script src="chat.js"></script>
+</body>
+</html>

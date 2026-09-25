@@ -1,0 +1,110 @@
+:root {
+  --cyan: #3ddbd9;
+  --magenta: #ec1561;
+  --ink: #08080c;
+  --panel: rgba(20, 24, 30, 0.95);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: transparent; overflow: hidden; height: 100%; width: 100%; }
+body { font-family: 'Cascadia Mono', 'Consolas', monospace; padding: 12px; }
+
+#chat-box {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; overflow: hidden; position: relative;
+  -webkit-app-region: drag;
+}
+
+#messages {
+  flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
+  padding: 16px 10px 10px;
+  scrollbar-width: thin; scrollbar-color: transparent transparent;
+  -webkit-app-region: no-drag;
+}
+#messages:hover { scrollbar-color: var(--cyan) transparent; }
+
+.msg { display: flex; width: 100%; }
+.bubble {
+  max-width: 85%; padding: 10px 14px; font-size: 13px; line-height: 1.4;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+  background: var(--ink);
+}
+.msg.user .bubble { color: #fff; border: 1px solid var(--magenta); box-shadow: 0 0 10px rgba(236, 21, 97, .35); }
+.msg.bot .bubble { color: var(--cyan); border: 1px solid var(--cyan); box-shadow: 0 0 10px rgba(61, 219, 217, .35); }
+.msg.bot.error .bubble { color: var(--magenta); border-color: var(--magenta); }
+.msg.status .bubble { opacity: .75; font-size: 12px; }
+.bubble .thinking { color: var(--magenta); }
+
+/* The cat's bubbles lean towards the cat, yours towards you. main tells us
+   which side of the chat the cat is on, so the layout follows a dragged cat. */
+body[data-cat-side="right"] .msg.bot { justify-content: flex-end; }
+body[data-cat-side="right"] .msg.user { justify-content: flex-start; }
+body[data-cat-side="right"] .msg.bot .bubble { border-radius: 14px 14px 4px 14px; }
+body[data-cat-side="right"] .msg.user .bubble { border-radius: 14px 14px 14px 4px; }
+body[data-cat-side="left"] .msg.bot { justify-content: flex-start; }
+body[data-cat-side="left"] .msg.user { justify-content: flex-end; }
+body[data-cat-side="left"] .msg.bot .bubble { border-radius: 14px 14px 14px 4px; }
+body[data-cat-side="left"] .msg.user .bubble { border-radius: 14px 14px 4px 14px; }
+
+/* a question that came from the terminal: same cat, different channel */
+.msg.from-term .bubble { border-style: dashed; opacity: .75; font-size: 11px; padding: 5px 10px; }
+.msg.from-term .bubble::before { content: '❯ '; color: var(--cyan); opacity: .7; }
+body[data-mode="term"] .composer { display: none; }
+
+.divider { opacity: .4; text-align: center; font-size: 11px; margin: 8px 0; color: #ddd; }
+
+.cmd-block {
+  display: block; width: 100%; margin-top: 8px; padding: 6px 10px; text-align: left;
+  color: var(--cyan); background: rgba(0, 0, 0, .4); border: 1px dashed var(--cyan); border-radius: 6px;
+  font: 12px 'Cascadia Mono', monospace; cursor: pointer; transition: background .2s;
+}
+.cmd-block:hover, .cmd-block:focus-visible { background: rgba(61, 219, 217, .2); outline: none; }
+
+.msg-img {
+  display: block; max-width: 100%; max-height: 220px; margin-bottom: 6px;
+  border-radius: 6px; border: 1px solid var(--cyan);
+}
+
+/* ── pending image ── */
+#attachment {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 10px 6px; padding: 6px 10px;
+  background: var(--panel); border: 1px solid var(--magenta); border-radius: 12px;
+  font-size: 11px; color: #aaa; -webkit-app-region: no-drag;
+}
+#attachment[hidden] { display: none; }
+#attachment img { height: 44px; border-radius: 4px; border: 1px solid var(--cyan); }
+#attachment button { margin-left: auto; background: none; border: none; cursor: pointer; color: var(--magenta); font-size: 14px; padding: 0 4px; }
+body.dragging #chat-box { outline: 2px dashed var(--magenta); outline-offset: -6px; }
+
+/* ── composer ── */
+.composer {
+  display: flex; align-items: center;
+  margin: 0 10px 10px; padding: 6px 10px;
+  background: var(--panel); border: 1px solid var(--cyan); border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .5);
+  -webkit-app-region: no-drag;
+}
+.drag-handle {
+  width: 24px; height: 32px; padding: 0 4px;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px;
+  cursor: grab; opacity: .5; transition: opacity .2s; -webkit-app-region: drag;
+}
+.drag-handle:hover { opacity: 1; }
+.drag-handle div { width: 14px; height: 2px; background: var(--cyan); border-radius: 1px; }
+/* min-width: 0 — otherwise the input refuses to shrink and pushes the close
+   button out of a narrow window, leaving no way to close it */
+#input {
+  flex: 1; min-width: 0; padding: 4px 8px;
+  background: transparent; border: none; outline: none;
+  color: #fff; font: 14px inherit; font-family: inherit;
+}
+#input::placeholder { color: rgba(255, 255, 255, .4); }
+#close {
+  width: 34px; height: 34px; margin-left: 6px; flex-shrink: 0;
+  display: flex; justify-content: center; align-items: center;
+  color: #fff; font-weight: bold; font-size: 16px; cursor: pointer;
+  background: var(--magenta); border: none; border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(236, 21, 97, .4); transition: background .2s, transform .2s;
+}
+#close:hover { background: #ff2a75; transform: scale(1.05); }

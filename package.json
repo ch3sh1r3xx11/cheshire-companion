@@ -1,0 +1,26 @@
+{
+  "name": "cheshire-companion",
+  "productName": "CHESHIRE Companion",
+  "version": "0.1.0",
+  "description": "A dry, spitefully loyal demon cat that lives on your desktop. An AI companion with hands, a memory — and a collar.",
+  "main": "src/main/index.js",
+  "license": "MIT",
+  "author": "Mateusz Połomski",
+  "private": true,
+  "keywords": ["electron", "desktop-pet", "ai-companion", "gemini", "ollama", "braille-art"],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test \"test/*.test.js\"",
+    "lint": "eslint .",
+    "check": "npm run lint && npm test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "electron": "^44.4.5",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0"
+  }
+}
