@@ -5,7 +5,9 @@
 **A dry, spitefully loyal demon cat that lives on your desktop.**
 An AI companion with hands, a memory — and a collar.
 
-<!-- demo: docs/demo.gif -->
+<p align="center"><img src="docs/demo.gif" alt="CHESHIRE blinking, yawning, shimmering and chatting on a desktop" width="720"></p>
+
+<p align="center"><sub>recorded with <code>npm run demo:en</code></sub></p>
 
 CHESHIRE sits in a transparent window above your desktop, blinks, yawns, and occasionally tells you that the work won't do itself. Hover over it and a chat opens. It answers in character — lowercase, no emoji, never pleased — but it **always** gives you the actual answer. It can look around its own folder, write notes, run a small set of safe commands, see images you paste, and remember facts about you across restarts.
 
