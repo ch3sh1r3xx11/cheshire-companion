@@ -13,13 +13,15 @@ const TIMELINE = [
   [9000, { cat: 'smile' }],
   [12000, { cat: 'say', key: 'quip' }],
   [16500, { cat: 'phase' }],
-  [19500, { chat: 'open' }],
-  [20500, { chat: 'user', turn: 0 }],
-  [21000, { chat: 'thinking', turn: 0 }],
-  [23000, { chat: 'reply', turn: 0 }],
-  [24800, { chat: 'user', turn: 1 }],
-  [25300, { chat: 'thinking', turn: 1 }],
-  [27300, { chat: 'reply', turn: 1 }],
+  [18600, { cat: 'menuOpen' }],   // shows off fur, claws, model, language…
+  [21600, { cat: 'menuClose' }],
+  [22200, { chat: 'open' }],
+  [23000, { chat: 'user', turn: 0 }],
+  [23400, { chat: 'thinking', turn: 0 }],
+  [25000, { chat: 'reply', turn: 0 }],
+  [26200, { chat: 'user', turn: 1 }],
+  [26600, { chat: 'thinking', turn: 1 }],
+  [28300, { chat: 'reply', turn: 1 }],
 ];
 
 function runDemo({ persona, catAction, emitChat, openChat }) {

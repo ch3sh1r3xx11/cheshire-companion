@@ -86,7 +86,7 @@
   setInterval(() => { if (!scripted() && Math.random() < 0.15) say(randomQuip()); }, 30_000);
 
   // `npm run demo`: the main process conducts, the cat performs on cue.
-  const DEMO_ACTIONS = { blink, yawn, smile, phase };
+  const DEMO_ACTIONS = { blink, yawn, smile, phase, menuOpen: () => openMenu(), menuClose: () => closeMenu() };
   api.onDemo((step) => {
     if (!step) return;
     if (step.action === 'say') say(String(step.text), Number(step.duration) || SAY_MS);
