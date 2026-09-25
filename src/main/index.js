@@ -31,9 +31,14 @@ try {
   if (e.code !== 'ENOENT') console.error('[env] .env could not be read:', e.message);
 }
 
-// A separate profile (settings, chat log, config) for development or a second
-// cat: CHESHIRE_USER_DATA=C:\some\folder npm start
-if (process.env.CHESHIRE_USER_DATA) app.setPath('userData', path.resolve(process.env.CHESHIRE_USER_DATA));
+// Where settings, chat log and config.json live. Pinned explicitly: Electron
+// derives it from `productName` ("CHESHIRE Companion"), so renaming the app
+// would silently move every user to an empty profile.
+// A separate profile for development or a second cat:
+//   CHESHIRE_USER_DATA=C:\some\folder npm start
+app.setPath('userData', process.env.CHESHIRE_USER_DATA
+  ? path.resolve(process.env.CHESHIRE_USER_DATA)
+  : path.join(app.getPath('appData'), 'cheshire-companion'));
 
 // ── hardening that must happen before 'ready' ─────────────────────────────
 app.enableSandbox();
@@ -160,16 +165,16 @@ function main() {
   }
 
   // ── autostart ──
-  // PITFALL: Electron writes `path + ' ' + args` to the Run key WITHOUT quotes.
-  // In a folder with a space ("…\My Projects\…") Windows cut the command at the
-  // space and the cat never woke up. So we quote both sides ourselves.
+  // PITFALL: Electron quotes each ARG itself (since v35-ish) but still writes
+  // the executable PATH bare. In a folder with a space ("…\My Projects\…")
+  // Windows cut the command at the space and the cat never woke up. So: quote
+  // the path ourselves, leave the args alone (quoting them too gives "\"…\"").
   function applyAutostart() {
     try {
-      const q = (s) => `"${s}"`;
       app.setLoginItemSettings({
         openAtLogin: Boolean(settings.get().autostart),
-        path: q(process.execPath),
-        args: app.isPackaged ? [] : [q(path.resolve(app.getAppPath()))],
+        path: `"${process.execPath}"`,
+        args: app.isPackaged ? [] : [path.resolve(app.getAppPath())],
       });
     } catch (e) {
       console.error('[autostart]', e.message);
