@@ -93,6 +93,15 @@ module.exports = {
     quitting: "i'm vanishing…",
   },
 
+  // `npm run demo`: a scripted showcase — no model, none of your data.
+  demo: {
+    quip: 'recording me again.\nget better lighting. meow.',
+    chat: [
+      { user: "hey, what's up?", reply: 'sitting on your screen. someone has to. meow.' },
+      { user: 'how do i check my ip on windows?', reply: 'forgot again. fine, here.\nCMD: ipconfig' },
+    ],
+  },
+
   quips: [
     'meow. all systems purring.',
     "we're all mad here.",

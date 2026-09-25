@@ -95,6 +95,15 @@ module.exports = {
     quitting: 'to ja znikam…',
   },
 
+  // `npm run demo`: scenariusz pokazowy, bez modelu i bez twoich danych.
+  demo: {
+    quip: 'znowu mnie nagrywasz.\nustaw lepsze światło. meow.',
+    chat: [
+      { user: 'siema, co tam?', reply: 'siedzę na twoim ekranie. ktoś musi. meow.' },
+      { user: 'jak sprawdzić moje ip w windowsie?', reply: 'znowu zapomniałeś. no dobra, masz.\nCMD: ipconfig' },
+    ],
+  },
+
   quips: [
     'meow. wszystkie systemy mruczą.',
     "we're all mad here.",

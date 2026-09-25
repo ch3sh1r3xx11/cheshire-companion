@@ -6,7 +6,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { app, clipboard, dialog, ipcMain, session } = require('electron');
 
-const { loadConfig } = require('./config');
+const { loadConfig, normalize } = require('./config');
 const { createSettingsStore } = require('./settings');
 const { persona: personaFor } = require('../persona');
 const { createMemory, createChatLog } = require('./memory');
@@ -15,6 +15,7 @@ const { createAgent } = require('./agent');
 const { createWindows } = require('./windows');
 const { createApiServer } = require('./api-server');
 const { startVision, startAgenda, createDailyState, createCanvas } = require('./watchers');
+const { runDemo } = require('./demo');
 const gemini = require('./llm/gemini');
 const ollama = require('./llm/ollama');
 
@@ -36,9 +37,13 @@ try {
 // would silently move every user to an empty profile.
 // A separate profile for development or a second cat:
 //   CHESHIRE_USER_DATA=C:\some\folder npm start
+// `npm run demo` gets its own throwaway profile: none of your history,
+// memory or config ever shows up in a recording.
+const DEMO = process.argv.includes('--demo');
+const DEMO_LANG = (process.argv.find((a) => a.startsWith('--lang=')) || '').slice(7);
 app.setPath('userData', process.env.CHESHIRE_USER_DATA
   ? path.resolve(process.env.CHESHIRE_USER_DATA)
-  : path.join(app.getPath('appData'), 'cheshire-companion'));
+  : path.join(app.getPath('appData'), DEMO ? 'cheshire-companion-demo' : 'cheshire-companion'));
 
 // ── hardening that must happen before 'ready' ─────────────────────────────
 app.enableSandbox();
@@ -77,12 +82,15 @@ function main() {
 
   // NOT app.getPath('documents'): with OneDrive folder redirection it returns
   // ...\OneDrive\Documents, which is not where anyone's projects live.
-  const config = loadConfig({ file: files.config, documentsDir: path.join(app.getPath('home'), 'Documents') });
+  const config = DEMO
+    ? normalize({ homeDir: path.join(userData, 'home') }, { documentsDir: userData })
+    : loadConfig({ file: files.config, documentsDir: path.join(app.getPath('home'), 'Documents') });
   fs.mkdirSync(config.homeDir, { recursive: true });
 
   const windows = createWindows({ files });
   const settings = createSettingsStore({ file: files.settings, locale: app.getLocale(), onChange: onSettingsChanged });
   settings.load();
+  if (DEMO && DEMO_LANG) settings.setFromUi('language', DEMO_LANG);
   const persona = () => personaFor(settings.get().language);
 
   const memory = createMemory(path.join(config.homeDir, config.memoryFile));
@@ -154,13 +162,14 @@ function main() {
         quitting: p.lines.quitting,
       },
       modelHasVision: gemini.isCloudModel(s.model),
+      demo: DEMO,
     };
   }
   function broadcastState() {
     for (const w of [windows.cat(), windows.chat()]) if (w && !w.isDestroyed()) w.webContents.send('state', state());
   }
   function onSettingsChanged(_s, key) {
-    if (key === 'autostart') applyAutostart();
+    if (key === 'autostart' && !DEMO) applyAutostart();
     broadcastState();
   }
 
@@ -237,6 +246,21 @@ function main() {
 
   windows.create();
   for (const w of [windows.cat(), windows.chat()]) w.webContents.on('did-finish-load', broadcastState);
+
+  if (DEMO) {
+    // No autostart, no local API, no watchers: the demo touches nothing on your system.
+    const w = windows.chat();
+    w.webContents.once('did-finish-load', () => {
+      const stop = runDemo({
+        persona,
+        catAction: (step) => { const c = windows.cat(); if (c && !c.isDestroyed()) c.webContents.send('cat:demo', step); },
+        emitChat: (event) => sendToChat('chat:event', event),
+        openChat: () => windows.showChat('chat', { focus: false }),
+      });
+      app.on('will-quit', stop);
+    });
+    return;
+  }
   applyAutostart();
 
   // ── the cat's own initiative ──

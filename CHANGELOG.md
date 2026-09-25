@@ -9,3 +9,4 @@ First public release.
 - Tools behind native consent dialogs and a command/path guard
 - Memory, restorable chat log, canvas notebook, agenda, optional system vision
 - Local API for the terminal with browser-proof access checks
+- `npm run demo`: a 30-second scripted showcase on a throwaway profile

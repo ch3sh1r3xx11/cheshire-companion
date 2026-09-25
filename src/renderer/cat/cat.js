@@ -16,6 +16,7 @@
   let menuOpen = false;
   let openList = null;        // which expandable section is open
   let busy = false;           // an animation owns the face right now
+  const scripted = () => Boolean(state && state.demo); // demo: no random idle moves
 
   // ── tiny DOM helper: never innerHTML, text is always textContent ──
   function el(tag, props = {}, ...children) {
@@ -59,15 +60,14 @@
 
   (function blinkLoop() {
     setTimeout(() => {
-      blink();
-      if (Math.random() < 0.25) setTimeout(blink, 350); // sometimes a double blink
+      if (!scripted()) { blink(); if (Math.random() < 0.25) setTimeout(blink, 350); } // sometimes a double blink
       blinkLoop();
     }, 2500 + Math.random() * 4500);
   })();
-  setInterval(() => { if (Math.random() < 0.45) yawn(); }, 70_000);  // ~every 2.5 min
-  setInterval(() => { if (Math.random() < 0.4) smile(); }, 55_000);  // ~every 2 min
-  setInterval(() => { if (Math.random() < 0.35) phase(); }, 60_000); // ~every 3 min
-  setTimeout(yawn, 15_000); // a welcome yawn: proof the animation is alive
+  setInterval(() => { if (!scripted() && Math.random() < 0.45) yawn(); }, 70_000);  // ~every 2.5 min
+  setInterval(() => { if (!scripted() && Math.random() < 0.4) smile(); }, 55_000);  // ~every 2 min
+  setInterval(() => { if (!scripted() && Math.random() < 0.35) phase(); }, 60_000); // ~every 3 min
+  setTimeout(() => { if (!scripted()) yawn(); }, 15_000); // a welcome yawn: proof the animation is alive
 
   // ── speech ──
   let bubbleTimer = null;
@@ -83,7 +83,15 @@
   }
   const randomQuip = () => state && state.quips.length ? state.quips[Math.floor(Math.random() * state.quips.length)] : 'meow.';
   api.onSay(({ text, duration }) => say(String(text), Number(duration) || SAY_MS));
-  setInterval(() => { if (Math.random() < 0.15) say(randomQuip()); }, 30_000);
+  setInterval(() => { if (!scripted() && Math.random() < 0.15) say(randomQuip()); }, 30_000);
+
+  // `npm run demo`: the main process conducts, the cat performs on cue.
+  const DEMO_ACTIONS = { blink, yawn, smile, phase };
+  api.onDemo((step) => {
+    if (!step) return;
+    if (step.action === 'say') say(String(step.text), Number(step.duration) || SAY_MS);
+    else if (DEMO_ACTIONS[step.action]) DEMO_ACTIONS[step.action]();
+  });
 
   // ── hover opens the chat, click says something, drag moves the cat ──
   let hoverTimer = null;

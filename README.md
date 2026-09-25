@@ -42,6 +42,8 @@ npm start
 
 No Gemini key? Pick an Ollama model in the menu (point `ollama.url` in the config at your server).
 
+**Just want to see it?** `npm run demo` (or `npm run demo:en`) plays a 30-second scripted showcase — blink, yawn, smile, a remark, the shimmer, then a short chat. No API key needed, and it runs on a throwaway profile, so it never shows your history and never touches autostart. Perfect for recording a GIF.
+
 ## Configuration
 
 Settings from the menu live in `%APPDATA%\cheshire-companion\cat-settings.json`.

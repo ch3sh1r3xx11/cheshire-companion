@@ -28,6 +28,8 @@
   },
   "scripts": {
     "start": "electron .",
+    "demo": "electron . --demo",
+    "demo:en": "electron . --demo --lang=en",
     "test": "node --test \"test/*.test.js\"",
     "lint": "eslint .",
     "check": "npm run lint && npm test"

@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld('cheshire', {
   getState: () => ipcRenderer.invoke('state:get'),
   onState: listen('state'),
   onSay: listen('cat:say'),
+  onDemo: listen('cat:demo'),
   hover: (on) => ipcRenderer.send('cat:hover', Boolean(on)),
   dragStart: () => ipcRenderer.send('cat:drag', 'start'),
   dragEnd: () => ipcRenderer.send('cat:drag', 'end'),
