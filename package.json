@@ -6,8 +6,23 @@
   "main": "src/main/index.js",
   "license": "MIT",
   "author": "Mateusz Połomski",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ch3sh1r3xx11/cheshire-companion.git"
+  },
+  "homepage": "https://github.com/ch3sh1r3xx11/cheshire-companion#readme",
+  "bugs": {
+    "url": "https://github.com/ch3sh1r3xx11/cheshire-companion/issues"
+  },
   "private": true,
-  "keywords": ["electron", "desktop-pet", "ai-companion", "gemini", "ollama", "braille-art"],
+  "keywords": [
+    "electron",
+    "desktop-pet",
+    "ai-companion",
+    "gemini",
+    "ollama",
+    "braille-art"
+  ],
   "engines": {
     "node": ">=22"
   },

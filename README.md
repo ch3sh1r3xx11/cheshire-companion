@@ -1,5 +1,7 @@
 # CHESHIRE Companion
 
+[![CI](https://github.com/ch3sh1r3xx11/cheshire-companion/actions/workflows/ci.yml/badge.svg)](https://github.com/ch3sh1r3xx11/cheshire-companion/actions/workflows/ci.yml) ![License: MIT](https://img.shields.io/badge/license-MIT-ec1561) ![Platform: Windows](https://img.shields.io/badge/platform-Windows-3ddbd9)
+
 **A dry, spitefully loyal demon cat that lives on your desktop.**
 An AI companion with hands, a memory — and a collar.
 
@@ -27,7 +29,7 @@ It speaks **English** and **Polish** (switch in the menu).
 Requirements: **Windows 10/11**, **Node.js 22+**, and either a free [Gemini API key](https://aistudio.google.com/apikey) or [Ollama](https://ollama.com).
 
 ```bash
-git clone https://github.com/<you>/cheshire-companion.git
+git clone https://github.com/ch3sh1r3xx11/cheshire-companion.git
 cd cheshire-companion
 npm install
 copy .env.example .env      # then paste your key into .env
